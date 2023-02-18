@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 
+const OPEN_AI_API_KEY = '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'
+
 async function addSticky() {
   const stickyNote = await miro.board.createStickyNote({
-    content: 'Hello, World!',
+    content: 'Hello, World 2!',
   });
 
   await miro.board.viewport.zoomTo(stickyNote);
