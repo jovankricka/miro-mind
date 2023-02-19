@@ -1,4 +1,24 @@
-async function addSticky(text, color) {
+const MIRO_API_ACCESS_TOKEN = 'eyJtaXJvLm9yaWdpbiI6ImV1MDEifQ_h_BuYFj_66EagPbc8sXuhsbmf1E'
+
+async function createMiroMindTag() {
+    return await miro.board.createTag({
+        title: 'Miro Mind',
+        color: 'green',
+    });
+}
+
+async function getAllBoardTags() {
+    const boardInfo = await miro.board.getInfo()
+    return await (await fetch('https://api.miro.com/v2/boards/' + boardInfo.id + '/tags', {
+        method: 'get',
+        headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + MIRO_API_ACCESS_TOKEN
+        }
+    })).json();
+}
+
+async function addSticky(text, color, tag) {
     return await miro.board.createStickyNote({
         content: text,
         style: {
@@ -6,10 +26,11 @@ async function addSticky(text, color) {
             textAlign: "center",
             textAlignVertical: "top",
         },
+        tagIds: tag ? [tag.id] : []
     });
 }
 
-async function addStickyRightOfAnotherSticky(text, color, stickyNote) {
+async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
     return await miro.board.createStickyNote({
         content: text,
         x: stickyNote ? stickyNote.x + stickyNote.width + 10 : 0,
@@ -19,6 +40,7 @@ async function addStickyRightOfAnotherSticky(text, color, stickyNote) {
             textAlign: "center",
             textAlignVertical: "top",
         },
+        tagIds: tag ? [tag.id] : []
     });
 }
 
@@ -31,9 +53,8 @@ async function addImageRightOfStickyNote(url, stickyNote) {
     return await miro.board.createImage({
         title: 'This is an image',
         url: url,
-        x: stickyNote.x + stickyNote.width + 100,
-        y: stickyNote.y,
-        width: stickyNote.width,
+        x: stickyNote ? stickyNote.x + stickyNote.width + 10 : 0,
+        y: stickyNote ? stickyNote.y : 0,
         rotation: 0.0,
     })
 }
@@ -52,4 +73,12 @@ async function connectTwoItems(firstItem, secondItem) {
     });
 }
 
-export {addSticky, addStickyRightOfAnotherSticky, zoomTo, addImageRightOfStickyNote, connectTwoItems, };
+export {
+    addSticky,
+    addStickyRightOfAnotherSticky,
+    zoomTo,
+    addImageRightOfStickyNote,
+    connectTwoItems,
+    createMiroMindTag,
+    getAllBoardTags
+};

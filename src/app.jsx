@@ -6,34 +6,53 @@ import {
     addImageRightOfStickyNote,
     addSticky,
     addStickyRightOfAnotherSticky,
-    connectTwoItems,
+    createMiroMindTag,
+    getAllBoardTags,
     zoomTo
 } from "./assets/miroApi";
 
 async function run() {
-    const answer = await getAnswerFromChatGpt("Can you respond me with an empty JSON?")
-    const photoUrl = await getPhotoUrlFromDalle2("A photo of the andromeda galaxy.")
+    // const photoUrl = await getPhotoUrlFromDalle2("A cyber punk pregnant woman that is standing on the space ship with a blast gun. ")
+    // const image = await addImageRightOfStickyNote(photoUrl)
+    // await zoomTo(image)
 
-    const stickyNote = await addSticky(answer)
-    const image = await addImageRightOfStickyNote(photoUrl, stickyNote)
-    await connectTwoItems(stickyNote, image)
-    await zoomTo(image)
 }
 
 const App = () => {
+
+    const getMiroMindTag = async () => {
+        const tags = (await getAllBoardTags()).data
+        let miroMindTag = tags.find(tag => tag.title === 'Miro Mind')
+        if (miroMindTag === undefined) {
+            return await createMiroMindTag()
+        } else {
+            return miroMindTag
+        }
+    }
+
     const [state, setState] = useState({
         input: '',
         prompt: 'What is the issue?',
-        stickyNotes: []
+        stickyNotes: [],
+        miroMindTag: undefined
     });
+
     React.useEffect(() => {
+        getMiroMindTag().then(miroMindTag => setState({
+            input: state.input,
+            prompt: state.prompt,
+            stickyNotes: state.stickyNotes,
+            miroMindTag: miroMindTag
+        }))
+
     }, []);
 
     const handleChangedInput = (event) => {
         setState({
             input: event.target.value,
             prompt: state.prompt,
-            stickyNotes: state.stickyNotes
+            stickyNotes: state.stickyNotes,
+            miroMindTag: state.miroMindTag
         })
     };
 
@@ -44,11 +63,12 @@ const App = () => {
         const question = sanitize(await getAnswerFromChatGpt("I want you to help me do 5 whys analysis. When I give you a statement of the " +
             "cause, you will return me only one question starting with 'Why' which is attempting to dig deeper into the " +
             "cause I provided. Here is the statement '" + state.input + "'."));
-        const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote);
+        const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag);
         setState({
             input: '',
             prompt: question,
-            stickyNotes: state.stickyNotes.concat([inputStickyNote, questionStickyNote])
+            stickyNotes: state.stickyNotes.concat([inputStickyNote, questionStickyNote]),
+            miroMindTag: state.miroMindTag
         })
     };
 
