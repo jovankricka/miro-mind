@@ -42,5 +42,15 @@ img {
   margin-bottom: 1em;
 }
 
-.fiveWhysButton {
+.marvinInput {
+  margin-bottom: 1em;
+}
+
+.marvinSendButton {
+  float: right;
+}
+
+.marvinChatHistory {
+  overflow-y: scroll;
+  height: 13em;
 }
