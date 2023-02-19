@@ -2,7 +2,7 @@ import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import {FiveWhys} from "./usecases/fivewhys";
 import {useState} from "react";
-import {WiseGuy} from "./usecases/wiseguy";
+import {Marvin} from "./usecases/marvin";
 
 const App = () => {
 
@@ -17,16 +17,16 @@ const App = () => {
         })
     };
 
-    const handleWiseGuyClicked = async () => {
+    const handleMarvinClicked = async () => {
         setState({
-            currentUseCase: 'wiseguy'
+            currentUseCase: 'marvin'
         })
     };
 
     if (state.currentUseCase === 'fivewhys') {
         return <FiveWhys/>
-    } else if (state.currentUseCase === 'wiseguy') {
-        return <WiseGuy/>
+    } else if (state.currentUseCase === 'marvin') {
+        return <Marvin/>
     } else {
         return (
             <div className="grid wrapper">
@@ -43,8 +43,8 @@ const App = () => {
                     </a>
                 </div>
                 <div className="cs1 ce12">
-                    <a className="button button-primary" onClick={handleWiseGuyClicked}>
-                        Wise guy
+                    <a className="button button-primary" onClick={handleMarvinClicked}>
+                        Marvin
                     </a>
                 </div>
             </div>

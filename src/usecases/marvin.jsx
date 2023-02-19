@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 
-const WiseGuy = () => {
+const Marvin = () => {
 
     const [state, setState] = useState({});
 
@@ -10,9 +10,9 @@ const WiseGuy = () => {
 
     return (
         <div className="grid wrapper">
-            Wise guy
+            Marvin
         </div>
     );
 };
 
-export {WiseGuy}
+export {Marvin}
