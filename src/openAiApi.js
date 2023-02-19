@@ -10,7 +10,7 @@ async function getAnswerFromChatGpt(question) {
         body: JSON.stringify({
             "model": "text-davinci-003",
             "prompt": question,
-            "max_tokens": 7,
+            "max_tokens": 1000,
             "temperature": 0
         })
     })).json();
