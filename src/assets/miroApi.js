@@ -33,7 +33,7 @@ async function addSticky(text, color, tag) {
 async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
     return await miro.board.createStickyNote({
         content: text,
-        x: stickyNote ? stickyNote.x + stickyNote.width + 10 : 0,
+        x: stickyNote ? stickyNote.x + stickyNote.width + 30 : 0,
         y: stickyNote ? stickyNote.y : 0,
         style: {
             fillColor: color ? color : 'light_blue',
@@ -60,7 +60,10 @@ async function addImageRightOfStickyNote(url, stickyNote) {
 }
 
 async function connectTwoItems(firstItem, secondItem) {
-    return await miro.board.createConnector({
+    if (firstItem === undefined || secondItem === undefined) {
+        return
+    }
+    await miro.board.createConnector({
         shape: 'curved',
         start: {
             item: firstItem.id,

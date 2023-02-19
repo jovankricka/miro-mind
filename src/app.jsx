@@ -5,7 +5,7 @@ import {getAnswerFromChatGpt, getPhotoUrlFromDalle2} from './openAiApi'
 import {
     addImageRightOfStickyNote,
     addSticky,
-    addStickyRightOfAnotherSticky,
+    addStickyRightOfAnotherSticky, connectTwoItems,
     createMiroMindTag,
     getAllBoardTags,
     zoomTo
@@ -57,13 +57,16 @@ const App = () => {
     };
 
     const handleSubmittedInput = async () => {
+        const lastStickyNote = state.stickyNotes[state.stickyNotes.length - 1]
         const inputStickyNote = state.stickyNotes.length === 0 ?
             await addSticky(state.input, 'light_green') :
-            await addStickyRightOfAnotherSticky(state.input, 'light_green', state.stickyNotes[state.stickyNotes.length - 1]);
+            await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote);
+        await connectTwoItems(lastStickyNote, inputStickyNote)
         const question = sanitize(await getAnswerFromChatGpt("I want you to help me do 5 whys analysis. When I give you a statement of the " +
             "cause, you will return me only one question starting with 'Why' which is attempting to dig deeper into the " +
             "cause I provided. Here is the statement '" + state.input + "'."));
         const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag);
+        await connectTwoItems(inputStickyNote, questionStickyNote)
         setState({
             input: '',
             prompt: question,
