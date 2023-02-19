@@ -2,8 +2,7 @@ import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import {FiveWhys} from "./usecases/fivewhys";
 import {useState} from "react";
-import {addSticky, addStickyRightOfAnotherSticky, connectTwoItems, zoomTo} from "./apis/miroApi";
-import {getAnswerFromChatGpt} from "./apis/openAiApi";
+import {WiseGuy} from "./usecases/wiseguy";
 
 const App = () => {
 
@@ -12,15 +11,22 @@ const App = () => {
     });
 
 
-
     const handleFiveWhysClicked = async () => {
         setState({
             currentUseCase: 'fivewhys'
         })
     };
 
+    const handleWiseGuyClicked = async () => {
+        setState({
+            currentUseCase: 'wiseguy'
+        })
+    };
+
     if (state.currentUseCase === 'fivewhys') {
         return <FiveWhys/>
+    } else if (state.currentUseCase === 'wiseguy') {
+        return <WiseGuy/>
     } else {
         return (
             <div className="grid wrapper">
@@ -32,8 +38,13 @@ const App = () => {
                     <p>Select one of the apps below</p>
                 </div>
                 <div className="cs1 ce12">
-                    <a className="button button-primary fiveWhysButton" onClick={handleFiveWhysClicked}>
+                    <a className="button button-primary" onClick={handleFiveWhysClicked}>
                         Five whys
+                    </a>
+                </div>
+                <div className="cs1 ce12">
+                    <a className="button button-primary" onClick={handleWiseGuyClicked}>
+                        Wise guy
                     </a>
                 </div>
             </div>
