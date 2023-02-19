@@ -23,7 +23,7 @@ const FiveWhys = () => {
 
     const [state, setState] = useState({
         input: '',
-        prompt: 'What is the issue?',
+        prompt: 'Can you describe the problem you faced?',
         stickyNotes: [],
         miroMindTag: undefined
     });

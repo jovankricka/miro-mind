@@ -24,12 +24,12 @@ const App = () => {
     } else {
         return (
             <div className="grid wrapper">
-                <div className="cs1 ce12">
+                <div className="cs1 ce5">
                     <img src="/src/assets/brain.png" alt=""/>
                 </div>
                 <div className="cs1 ce12">
                     <h1>Welcome to Miro's AI powered toolbox</h1>
-                    <p>Select one of the apps below.</p>
+                    <p>Select one of the apps below</p>
                 </div>
                 <div className="cs1 ce12">
                     <a className="button button-primary fiveWhysButton" onClick={handleFiveWhysClicked}>
