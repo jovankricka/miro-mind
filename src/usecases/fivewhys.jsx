@@ -9,13 +9,6 @@ import {
     zoomTo
 } from "../apis/miroApi";
 
-async function run() {
-    // const photoUrl = await getPhotoUrlFromDalle2("A cyber punk pregnant woman that is standing on the space ship with a blast gun. ")
-    // const image = await addImageRightOfStickyNote(photoUrl)
-    // await zoomTo(image)
-
-}
-
 const FiveWhys = () => {
 
     const getMiroMindTag = async () => {
@@ -88,8 +81,8 @@ const FiveWhys = () => {
                 <img src="/src/assets/congratulations.png" alt=""/>
             </div>
             <div className="cs1 ce12">
-                <h1>Welcome to 5 whys!</h1>
-                <p>Lets get to the bottom of the problem! {state.prompt}</p>
+                <h1>5 (or more) whys</h1>
+                <p>Lets get to the bottom of the problem! <ul><b>{state.prompt}</b></ul></p>
             </div>
             <div className="cs1 ce12">
                 <input className="input fiveWhysInput" onChange={handleChangedInput} value={state.input}/>
