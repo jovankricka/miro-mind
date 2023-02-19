@@ -3,14 +3,18 @@ import {useState} from 'react';
 
 const Marvin = () => {
 
-    const [state, setState] = useState({});
+    const [state, setState] = useState({
+        conversation: []
+    });
 
     React.useEffect(() => {
     }, []);
 
     return (
         <div className="grid wrapper">
-            Marvin
+            <div className="cs1 ce12">
+                <img src="/src/assets/marvin.png" alt=""/>
+            </div>
         </div>
     );
 };
