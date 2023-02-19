@@ -45,8 +45,8 @@ async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
 }
 
 
-async function zoomTo(item) {
-    await miro.board.viewport.zoomTo(item);
+async function zoomTo(items) {
+    await miro.board.viewport.zoomTo(items);
 }
 
 async function addImageRightOfStickyNote(url, stickyNote) {
