@@ -13,10 +13,10 @@ import congratulationsImage from '../assets/congratulations.png'
 const FiveWhys = () => {
 
     const getMiroMindTag = async () => {
-        const tags = (await getAllBoardTags()).data
+        const tags = (await getAllBoardTags(process.env.MIRO_API_ACCESS_TOKEN)).data
         let miroMindTag = tags.find(tag => tag.title === 'Miro Mind')
         if (miroMindTag === undefined) {
-            return await createMiroMindTag()
+            return await createMiroMindTag(process.env.MIRO_API_ACCESS_TOKEN)
         } else {
             return miroMindTag
         }
@@ -30,7 +30,7 @@ const FiveWhys = () => {
     });
 
     React.useEffect(() => {
-        getMiroMindTag().then(miroMindTag => setState({
+        getMiroMindTag(process.env.MIRO_API_ACCESS_TOKEN).then(miroMindTag => setState({
             input: state.input,
             prompt: state.prompt,
             stickyNotes: state.stickyNotes,
@@ -51,16 +51,16 @@ const FiveWhys = () => {
     const handleSubmittedInput = async () => {
         const lastStickyNote = state.stickyNotes[state.stickyNotes.length - 1]
         const inputStickyNote = lastStickyNote ?
-            await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote) :
+            await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote, process.env.MIRO_API_ACCESS_TOKEN) :
             await addSticky(state.input, 'light_green');
-        await connectTwoItems(lastStickyNote, inputStickyNote)
+        await connectTwoItems(lastStickyNote, inputStickyNote, process.env.MIRO_API_ACCESS_TOKEN)
         let updatedStickyNotes = state.stickyNotes.concat([inputStickyNote])
-        await zoomTo(updatedStickyNotes)
+        await zoomTo(updatedStickyNotes, process.env.MIRO_API_ACCESS_TOKEN)
         const question = sanitize(await getAnswerFromChatGpt("I want you to help me do 5 whys analysis. When I give you a statement of the " +
             "cause, you will return me only one question starting with 'Why' which is attempting to dig deeper into the " +
             "cause I provided. Here is the statement '" + state.input + "'.", process.env.OPEN_AI_API_KEY));
-        const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag);
-        await connectTwoItems(inputStickyNote, questionStickyNote)
+        const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag, process.env.MIRO_API_ACCESS_TOKEN);
+        await connectTwoItems(inputStickyNote, questionStickyNote, process.env.MIRO_API_ACCESS_TOKEN)
         updatedStickyNotes = updatedStickyNotes.concat([questionStickyNote])
         setState({
             input: '',
@@ -68,7 +68,7 @@ const FiveWhys = () => {
             stickyNotes: updatedStickyNotes,
             miroMindTag: state.miroMindTag
         })
-        await zoomTo(updatedStickyNotes)
+        await zoomTo(updatedStickyNotes, process.env.MIRO_API_ACCESS_TOKEN)
         console.log(updatedStickyNotes)
     };
 

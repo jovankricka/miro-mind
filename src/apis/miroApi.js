@@ -1,13 +1,11 @@
-const MIRO_API_ACCESS_TOKEN = process.env.MIRO_API_ACCESS_TOKEN
-
-async function createMiroMindTag() {
+async function createMiroMindTag(apiKey) {
     return await miro.board.createTag({
         title: 'Miro Mind',
         color: 'green',
     });
 }
 
-async function getAllBoardTags() {
+async function getAllBoardTags(apiKey) {
     const boardInfo = await miro.board.getInfo()
     return await (await fetch('https://api.miro.com/v2/boards/' + boardInfo.id + '/tags', {
         method: 'get',
@@ -18,7 +16,7 @@ async function getAllBoardTags() {
     })).json();
 }
 
-async function addSticky(text, color, tag) {
+async function addSticky(text, color, tag, apiKey) {
     return await miro.board.createStickyNote({
         content: text,
         style: {
@@ -30,7 +28,7 @@ async function addSticky(text, color, tag) {
     });
 }
 
-async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
+async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag, apiKey) {
     return await miro.board.createStickyNote({
         content: text,
         x: stickyNote ? stickyNote.x + stickyNote.width + 30 : 0,
@@ -45,11 +43,11 @@ async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
 }
 
 
-async function zoomTo(items) {
+async function zoomTo(items, apiKey) {
     await miro.board.viewport.zoomTo(items);
 }
 
-async function addImageRightOfStickyNote(url, stickyNote) {
+async function addImageRightOfStickyNote(url, stickyNote, apiKey) {
     return await miro.board.createImage({
         title: 'This is an image',
         url: url,
@@ -59,7 +57,7 @@ async function addImageRightOfStickyNote(url, stickyNote) {
     })
 }
 
-async function connectTwoItems(firstItem, secondItem) {
+async function connectTwoItems(firstItem, secondItem, apiKey) {
     if (firstItem === undefined || secondItem === undefined) {
         return
     }
