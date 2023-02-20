@@ -33,7 +33,7 @@ const Marvin = () => {
         })
     }
 
-    const wrapUserInput = async (userInput) => {
+    const wrapUserInput = (userInput) => {
         const openingLine = state.conversation.length === 0 ?
             'This is the sample whiteboard description in JSON format ' :
             'This is the whiteboard description in JSON format ';
