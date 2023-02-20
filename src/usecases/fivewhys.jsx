@@ -52,7 +52,7 @@ const FiveWhys = () => {
         const lastStickyNote = state.stickyNotes[state.stickyNotes.length - 1]
         const inputStickyNote = lastStickyNote ?
             await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote, process.env.MIRO_API_ACCESS_TOKEN) :
-            await addSticky(state.input, 'light_green');
+            await addSticky(state.input, 'light_green', process.env.MIRO_API_ACCESS_TOKEN);
         await connectTwoItems(lastStickyNote, inputStickyNote, process.env.MIRO_API_ACCESS_TOKEN)
         let updatedStickyNotes = state.stickyNotes.concat([inputStickyNote])
         await zoomTo(updatedStickyNotes, process.env.MIRO_API_ACCESS_TOKEN)
