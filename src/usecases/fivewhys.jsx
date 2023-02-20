@@ -48,7 +48,7 @@ const FiveWhys = () => {
         })
     };
 
-    const handleSubmittedInput = async () => {
+    const handleSubmittedInput = async () => {console.log(state.miroMindTag)
         const lastStickyNote = state.stickyNotes[state.stickyNotes.length - 1]
         const inputStickyNote = lastStickyNote ?
             await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN) :
