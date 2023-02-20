@@ -1,9 +1,11 @@
-async function getAnswerFromChatGpt(question, apiKey) {
+const OPEN_AI_API_KEY = import.meta.env.OPEN_AI_API_KEY
+
+async function getAnswerFromChatGpt(question) {
     const chatGptResponse = await (await fetch('https://api.openai.com/v1/completions', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiKey
+            'Authorization': 'Bearer ' + OPEN_AI_API_KEY
         },
         body: JSON.stringify({
             "model": "text-davinci-003",
@@ -15,12 +17,12 @@ async function getAnswerFromChatGpt(question, apiKey) {
     return chatGptResponse.choices[0].text
 }
 
-async function getPhotoUrlFromDalle2(description, apiKey) {
+async function getPhotoUrlFromDalle2(description) {
     const dalle2Response = await (await fetch('https://api.openai.com/v1/images/generations', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiKey
+            'Authorization': 'Bearer ' + OPEN_AI_API_KEY
         },
         body: JSON.stringify({
             "prompt": description,
