@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {FiveWhys} from "./usecases/fivewhys";
 import {useState} from "react";
 import {Marvin} from "./usecases/marvin";
-import brainImage from 'assets/brain.png'
+import brainImage from './assets/brain.png'
 
 const App = () => {
 
