@@ -58,7 +58,7 @@ const FiveWhys = () => {
         await zoomTo(updatedStickyNotes, import.meta.env.MIRO_API_ACCESS_TOKEN)
         const question = sanitize(await getAnswerFromChatGpt("I want you to help me do 5 whys analysis. When I give you a statement of the " +
             "cause, you will return me only one question starting with 'Why' which is attempting to dig deeper into the " +
-            "cause I provided. Here is the statement '" + state.input + "'.", import.meta.env.OPEN_AI_API_KEY));
+            "cause I provided. Here is the statement '" + state.input + "'."));
         const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag, import.meta.env.MIRO_API_ACCESS_TOKEN);
         await connectTwoItems(inputStickyNote, questionStickyNote, import.meta.env.MIRO_API_ACCESS_TOKEN)
         updatedStickyNotes = updatedStickyNotes.concat([questionStickyNote])
