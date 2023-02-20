@@ -3,6 +3,8 @@ import {useState} from 'react';
 import {getAnswerFromChatGpt} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 
+const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\'},{\'id\':\'B\',\'text\':\'StickyB\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
+
 const Marvin = () => {
 
     const [state, setState] = useState({
@@ -21,7 +23,7 @@ const Marvin = () => {
     };
 
     const handleMarvinSend = async () => {
-        const chatGptAnswer = await getAnswerFromChatGpt(state.input, import.meta.env.VITE_OPEN_AI_API_KEY)
+        const chatGptAnswer = await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
         setState({
             input: '',
@@ -31,12 +33,21 @@ const Marvin = () => {
         })
     }
 
+    const wrapUserInput = async (userInput) => {
+        const openingLine = state.conversation.length === 0 ?
+            'This is the sample whiteboard description in JSON format ' :
+            'This is the whiteboard description in JSON format ';
+        return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
+            '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
+            'JSON and your feedback in a natural language as \'feedback\' field in that JSON.'
+    }
+
     const renderChatHistory = () => {
         const conversationCopy = structuredClone(state.conversation);
         return <div id='marvinChatHistory' className='marvinChatHistory'>
             {conversationCopy
                 .sort((a, b) => b.key - a.key)
-                .map(message => <p key={message.key}> <b>{message.author} ></b> {message.text}</p>)}
+                .map(message => <p key={message.key}><b>{message.author} ></b> {message.text}</p>)}
         </div>
     }
 
