@@ -11,7 +11,7 @@ async function getAllBoardTags(apiKey) {
         method: 'get',
         headers: {
             'accept': 'application/json',
-            'Authorization': 'Bearer ' + MIRO_API_ACCESS_TOKEN
+            'Authorization': 'Bearer ' + VITE_MIRO_API_ACCESS_TOKEN
         }
     })).json();
 }
