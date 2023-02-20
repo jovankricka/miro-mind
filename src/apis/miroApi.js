@@ -1,4 +1,4 @@
-const MIRO_API_ACCESS_TOKEN = 'eyJtaXJvLm9yaWdpbiI6ImV1MDEifQ_h_BuYFj_66EagPbc8sXuhsbmf1E'
+const MIRO_API_ACCESS_TOKEN = process.env.MIRO_API_ACCESS_TOKEN
 
 async function createMiroMindTag() {
     return await miro.board.createTag({

@@ -1,4 +1,4 @@
-const OPEN_AI_API_KEY = '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'
+const OPEN_AI_API_KEY = process.env.OPEN_AI_API_KEY
 
 async function getAnswerFromChatGpt(question) {
     const chatGptResponse = await (await fetch('https://api.openai.com/v1/completions', {
