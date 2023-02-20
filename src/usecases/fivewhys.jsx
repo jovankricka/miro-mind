@@ -8,6 +8,7 @@ import {
     getAllBoardTags,
     zoomTo
 } from "../apis/miroApi";
+import congratulationsImage from '../assets/congratulations.png'
 
 const FiveWhys = () => {
 
@@ -78,7 +79,7 @@ const FiveWhys = () => {
     return (
         <div className="grid wrapper">
             <div className="cs1 ce12">
-                <img src="/src/assets/congratulations.png" alt=""/>
+                <img src={congratulationsImage} alt=""/>
             </div>
             <div className="cs1 ce12">
                 <h1>5 (or more) whys</h1>

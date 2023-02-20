@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {FiveWhys} from "./usecases/fivewhys";
 import {useState} from "react";
 import {Marvin} from "./usecases/marvin";
+import brainImage from 'assets/brain.png'
 
 const App = () => {
 
@@ -31,7 +32,7 @@ const App = () => {
         return (
             <div className="grid wrapper">
                 <div className="cs1 ce5">
-                    <img src="/src/assets/brain.png" alt=""/>
+                    <img src={brainImage} alt=""/>
                 </div>
                 <div className="cs1 ce12">
                     <h1>Welcome to Miro's AI powered toolbox</h1>

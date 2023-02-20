@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {getAnswerFromChatGpt} from "../apis/openAiApi";
+import marvinImage from '../assets/marvin.png'
 
 const Marvin = () => {
 
@@ -42,7 +43,7 @@ const Marvin = () => {
     return (
         <div className="grid wrapper usecase">
             <div className="cs1 ce12">
-                <img src="/src/assets/marvin.png" alt=""/>
+                <img src={marvinImage} alt=""/>
             </div>
             <div className="cs1 ce12">
                 <h1>Brainstorm through chatting with Marvin</h1>
