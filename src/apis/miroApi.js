@@ -24,7 +24,7 @@ async function addSticky(text, color, tag) {
             textAlign: "center",
             textAlignVertical: "top",
         },
-        // tagIds: tag ? [tag.id] : []
+        tagIds: tag ? [tag.id] : []
     });
 }
 
@@ -38,7 +38,7 @@ async function addStickyRightOfAnotherSticky(text, color, stickyNote, tag) {
             textAlign: "center",
             textAlignVertical: "top",
         },
-        //tagIds: tag ? [tag.id] : []
+        tagIds: tag ? [tag.id] : []
     });
 }
 

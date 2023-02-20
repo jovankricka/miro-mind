@@ -48,11 +48,11 @@ const FiveWhys = () => {
         })
     };
 
-    const handleSubmittedInput = async () => {console.log(state.miroMindTag)
+    const handleSubmittedInput = async () => {
         const lastStickyNote = state.stickyNotes[state.stickyNotes.length - 1]
         const inputStickyNote = lastStickyNote ?
-            await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN) :
-            await addSticky(state.input, 'light_green', import.meta.env.VITE_MIRO_API_ACCESS_TOKEN);
+            await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote) :
+            await addSticky(state.input, 'light_green');
         await connectTwoItems(lastStickyNote, inputStickyNote, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
         let updatedStickyNotes = state.stickyNotes.concat([inputStickyNote])
         await zoomTo(updatedStickyNotes, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
@@ -69,7 +69,6 @@ const FiveWhys = () => {
             miroMindTag: state.miroMindTag
         })
         await zoomTo(updatedStickyNotes, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
-        console.log(updatedStickyNotes)
     };
 
     const sanitize = (text) => {
