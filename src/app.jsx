@@ -4,8 +4,7 @@ import {FiveWhys} from "./usecases/fivewhys";
 import {useState} from "react";
 import {Marvin} from "./usecases/marvin";
 import brainImage from './assets/brain.png'
-
-
+import {Assist} from "./usecases/assist";
 
 const App = () => {
 
@@ -26,25 +25,18 @@ const App = () => {
         })
     };
 
-    miro.board.ui.on('selection:update', async (event) => {
-        console.log('Subscribed to selection update event', event);
-        console.log(event.items);
-        const selectedItems = event.items;
-
-        // Filter sticky notes from the selected items
-        const stickyNotes = selectedItems.filter((item) => item.type === 'sticky_note');
-
-        // Change the fill color of the sticky notes
-        for (const stickyNote of stickyNotes) {
-            stickyNote.style.fillColor = 'cyan';
-            await stickyNote.sync();
-        }
-    });
+    const handleAssistClicked = async () => {
+        setState({
+            currentUseCase: 'assist'
+        })
+    };
 
     if (state.currentUseCase === 'fivewhys') {
         return <FiveWhys/>
     } else if (state.currentUseCase === 'marvin') {
         return <Marvin/>
+    } else if (state.currentUseCase === 'assist') {
+        return <Assist/>
     } else {
         return (
             <div className="grid wrapper">
@@ -63,6 +55,11 @@ const App = () => {
                 <div className="cs1 ce12">
                     <a className="button button-primary" onClick={handleMarvinClicked}>
                         Marvin
+                    </a>
+                </div>
+                <div className="cs1 ce12">
+                    <a className="button button-primary" onClick={handleAssistClicked}>
+                        Assist
                     </a>
                 </div>
             </div>
