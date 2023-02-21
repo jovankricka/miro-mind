@@ -1,4 +1,4 @@
-async function getAnswerFromChatGpt(question, apiKey) {
+async function getAnswerFromChatGpt(question, apiKey) {console.log('Calling OpenAI')
     const chatGptResponse = await (await fetch('https://api.openai.com/v1/completions', {
         method: 'post',
         headers: {
@@ -11,7 +11,7 @@ async function getAnswerFromChatGpt(question, apiKey) {
             "max_tokens": 1000,
             "temperature": 0
         })
-    })).json();
+    })).json();console.log(chatGptResponse)
     return chatGptResponse.choices[0].text
 }
 

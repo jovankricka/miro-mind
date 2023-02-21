@@ -22,9 +22,12 @@ const Marvin = () => {
         })
     };
 
-    const handleMarvinSend = async () => {
+    const handleMarvinSend = async () => {console.log('Sending to ChatGPT...')
         const chatGptResponse = await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)
+        console.log(chatGptResponse)
+        console.log(sanitize(chatGptResponse))
         const chatGptAnswer = JSON.parse(sanitize(chatGptResponse)).feedback;
+        console.log(chatGptAnswer)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
         setState({
             input: '',
@@ -35,7 +38,7 @@ const Marvin = () => {
     }
 
     const sanitize = (text) => {
-        return text.replaceAll('\n', '')
+        return text.replaceAll('\n', '').replaceAll('\'', '"')
     }
 
     const wrapUserInput = (userInput) => {
@@ -44,7 +47,8 @@ const Marvin = () => {
             'This is the whiteboard description in JSON format ';
         return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
-            'JSON and your feedback in a natural language as \'feedback\' field in that JSON.'
+            'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
+            'Make sure to escape single quotes in your `feedback` field.'
     }
 
     const renderChatHistory = () => {
