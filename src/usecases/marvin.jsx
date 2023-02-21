@@ -2,6 +2,7 @@ import * as React from 'react';
 import {useState} from 'react';
 import {getAnswerFromChatGpt} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
+import {addSticky} from "../apis/miroApi";
 
 const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\'},{\'id\':\'B\',\'text\':\'StickyB\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
 
@@ -18,23 +19,30 @@ const Marvin = () => {
     const handleChangedInput = (event) => {
         setState({
             input: event.target.value,
-            conversation: state.conversation
+            conversation: state.conversation,
+            stickies: [],
+            connectors: []
         })
     };
 
     const handleMarvinSend = async () => {console.log('Sending to ChatGPT...')
-        const chatGptResponse = await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)
-        console.log(chatGptResponse)
-        console.log(sanitize(chatGptResponse))
-        const chatGptAnswer = JSON.parse(sanitize(chatGptResponse)).feedback;
-        console.log(chatGptAnswer)
+        const chatGptResponse = JSON.parse(sanitize(await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)))
+        const feedback = chatGptResponse.feedback;
+        console.log(feedback)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
         setState({
             input: '',
             conversation: state.conversation.concat([
                 {author: 'You', key: lastKey + 1, text: state.input},
-                {author: 'Marvin', key: lastKey + 2, text: chatGptAnswer}])
+                {author: 'Marvin', key: lastKey + 2, text: feedback}])
         })
+        await updateBoard(chatGptResponse.stickies, chatGptResponse.connectors)
+    }
+
+    const updateBoard = async (stickies, connectors) => {
+        for (const sticky of stickies) {
+            await addSticky(sticky.text);
+        }
     }
 
     const sanitize = (text) => {
@@ -48,8 +56,7 @@ const Marvin = () => {
         return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Make sure to escape single quotes in your `feedback` field. Prompt user for follow ups and suggests next ' +
-            'topics.'
+            'Make sure to escape single quotes in your `feedback` field. Prompt user for follow ups.'
     }
 
     const renderChatHistory = () => {
