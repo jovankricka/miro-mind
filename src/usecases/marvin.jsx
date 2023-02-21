@@ -42,16 +42,20 @@ const Marvin = () => {
     const updateBoard = async (stickies, connectors, conversation) => {
         const newStickies = []
         for (const sticky of stickies) {
-            const fullSticky = await addSticky(sticky.text, 'light_green', undefined, sticky.x, sticky.y)
-            newStickies.push({
-                id: fullSticky.id,
-                text: fullSticky.content,
-                x: fullSticky.x,
-                y: fullSticky.y
-            })
+            if (state.stickies.find(existingSticky => existingSticky.id === sticky.id) === undefined) {
+                const fullSticky = await addSticky(sticky.text, 'light_green', undefined, sticky.x, sticky.y)
+                newStickies.push({
+                    id: fullSticky.id,
+                    text: fullSticky.content,
+                    x: fullSticky.x,
+                    y: fullSticky.y
+                })
+            }
         }
         console.log(newStickies)
-        await zoomTo(newStickies)
+        if (newStickies.length > 0) {
+            await zoomTo(newStickies)
+        }
         setState({
             input: '',
             conversation: conversation,
@@ -79,6 +83,8 @@ const Marvin = () => {
             'Use double quotes around all JSON fields and values. ' +
             'Do not use newlines at all in your response.' +
             'Prompt user for follow ups. ' +
+            'If you are adding a new sticky, make sure its id is unique.' +
+            'When user asks a straight question, answer it in detail and create stickies that describe your answer. ' +
             'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
     }
 
