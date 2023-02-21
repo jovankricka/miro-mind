@@ -10,7 +10,9 @@ const Marvin = () => {
 
     const [state, setState] = useState({
         input: '',
-        conversation: []
+        conversation: [],
+        stickies: [],
+        connectors: []
     });
 
     React.useEffect(() => {
@@ -20,13 +22,13 @@ const Marvin = () => {
         setState({
             input: event.target.value,
             conversation: state.conversation,
-            stickies: [],
-            connectors: []
+            stickies: state.stickies,
+            connectors: state.connectors
         })
     };
 
     const handleMarvinSend = async () => {
-        console.log('Sending prompt to teh AI...')
+        console.log('Sending prompt to the AI...')
         const aiResponse = JSON.parse(sanitize(await getAnswerFromAIModel(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)))
         console.log(aiResponse)
         const feedback = aiResponse.feedback;
@@ -40,15 +42,22 @@ const Marvin = () => {
     const updateBoard = async (stickies, connectors, conversation) => {
         const newStickies = []
         for (const sticky of stickies) {
-            newStickies.push(await addSticky(sticky.text, 'light_green', undefined, sticky.x, sticky.y))
+            const fullSticky = await addSticky(sticky.text, 'light_green', undefined, sticky.x, sticky.y)
+            newStickies.push({
+                id: fullSticky.id,
+                text: fullSticky.content,
+                x: fullSticky.x,
+                y: fullSticky.y
+            })
         }
+        console.log(newStickies)
+        await zoomTo(newStickies)
         setState({
             input: '',
             conversation: conversation,
             stickies: newStickies,
             connectors: state.connectors,
         })
-        await zoomTo(newStickies)
     }
 
     const sanitize = (text) => {
