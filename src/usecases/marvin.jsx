@@ -58,14 +58,23 @@ const Marvin = () => {
     const wrapUserInput = (userInput) => {
         const openingLine = state.conversation.length === 0 ?
             'This is the sample whiteboard description in JSON format ' + SAMPLE_WHITEBOARD_JSON + '.' :
-            'This is the whiteboard description in JSON format ' + JSON.stringify({ stickies: state.stickies, connectors: state.connectors }) + '.';
-        return openingLine + ' This is users input ' +
-            '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
+            'This is the whiteboard description in JSON format ' + JSON.stringify({
+                stickies: state.stickies,
+                connectors: state.connectors
+            }) + '.';
+        const previousConversation = getPreviousConversation();
+        return openingLine + ' This is users input \'' + userInput + '\. ' +
+            'This is previous conversation with the user ' + previousConversation + '.' +
+            'Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Use double quotes around all JSON fields and values. Use single quote inside the `feedback` field value. ' +
+            'Use double quotes around all JSON fields and values. ' +
             'Do not use newlines at all in your response.' +
             'Prompt user for follow ups. ' +
             'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
+    }
+
+    const getPreviousConversation = () => {
+        return state.conversation.map(message => '[' + message.author + ' > ' + message.text + ']').join()
     }
 
     const renderChatHistory = () => {
