@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState} from 'react';
 import {getAnswerFromChatGpt} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
-import {addSticky} from "../apis/miroApi";
+import {addSticky, zoomTo} from "../apis/miroApi";
 
 const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\'},{\'id\':\'B\',\'text\':\'StickyB\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
 
@@ -30,19 +30,23 @@ const Marvin = () => {
         const feedback = chatGptResponse.feedback;
         console.log(feedback)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
-        setState({
-            input: '',
-            conversation: state.conversation.concat([
-                {author: 'You', key: lastKey + 1, text: state.input},
-                {author: 'Marvin', key: lastKey + 2, text: feedback}])
-        })
-        await updateBoard(chatGptResponse.stickies, chatGptResponse.connectors)
+        await updateBoard(chatGptResponse.stickies, chatGptResponse.connectors, state.conversation.concat([
+            {author: 'You', key: lastKey + 1, text: state.input},
+            {author: 'Marvin', key: lastKey + 2, text: feedback}]))
     }
 
-    const updateBoard = async (stickies, connectors) => {
+    const updateBoard = async (stickies, connectors, conversation) => {
+        const newStickies = []
         for (const sticky of stickies) {
-            await addSticky(sticky.text);
+            newStickies.push(await addSticky(sticky.text))
         }
+        setState({
+            input: '',
+            conversation: conversation,
+            stickies: newStickies,
+            connectors: state.connectors,
+        })
+        await zoomTo(newStickies)
     }
 
     const sanitize = (text) => {
@@ -56,7 +60,7 @@ const Marvin = () => {
         return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Make sure to escape single quotes in your `feedback` field. Prompt user for follow ups.'
+            'Make sure to escape single quotes in your `feedback` field with backslashes. Prompt user for follow ups.'
     }
 
     const renderChatHistory = () => {
