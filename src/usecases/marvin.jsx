@@ -4,7 +4,7 @@ import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 import {addSticky, zoomTo} from "../apis/miroApi";
 
-const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\',\'x\':2,\'y\':2},{\'id\':\'B\',\'text\':\'StickyB\',\'x\':2,\'y\':2},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
+const SAMPLE_WHITEBOARD_JSON = '{"stickies":[{"id":"A","text":"StickyA","x":2,"y":2},{"id":"B","text":"StickyB","x":2,"y":2},...],"connectors":[{"from":"A","to":"B"},...]}'
 
 const Marvin = () => {
 
@@ -52,17 +52,19 @@ const Marvin = () => {
     }
 
     const sanitize = (text) => {
-        return text.replaceAll('\n', '').replaceAll('\'', '"')
+        return text.replaceAll('\n', '')
     }
 
     const wrapUserInput = (userInput) => {
         const openingLine = state.conversation.length === 0 ?
-            'This is the sample whiteboard description in JSON format ' :
-            'This is the whiteboard description in JSON format ';
-        return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
+            'This is the sample whiteboard description in JSON format ' + SAMPLE_WHITEBOARD_JSON + '.' :
+            'This is the whiteboard description in JSON format ' + JSON.stringify({ stickies: state.stickies, connectors: state.connectors }) + '.';
+        return openingLine + ' This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Make sure to escape single quotes in your `feedback` field with backslashes. Prompt user for follow ups. ' +
+            'Use double quotes around all JSON fields and values. Use single quote inside the `feedback` field value. ' +
+            'Do not use newlines at all in your response.' +
+            'Prompt user for follow ups. ' +
             'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
     }
 
