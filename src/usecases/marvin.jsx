@@ -23,7 +23,8 @@ const Marvin = () => {
     };
 
     const handleMarvinSend = async () => {
-        const chatGptAnswer = await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)
+        const chatGptResponse = await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)
+        const chatGptAnswer = JSON.parse(chatGptResponse).feedback;
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
         setState({
             input: '',
