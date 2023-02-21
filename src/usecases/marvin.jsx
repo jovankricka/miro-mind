@@ -48,7 +48,8 @@ const Marvin = () => {
         return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Make sure to escape single quotes in your `feedback` field.'
+            'Make sure to escape single quotes in your `feedback` field. Prompt user for follow ups and suggests next ' +
+            'topics.'
     }
 
     const renderChatHistory = () => {
