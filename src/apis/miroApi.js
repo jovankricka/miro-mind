@@ -16,7 +16,7 @@ async function getAllBoardTags(apiKey) {
     })).json();
 }
 
-async function addSticky(text, color, tag) {
+async function addSticky(text, color, tag, x, y) {
     return await miro.board.createStickyNote({
         content: text,
         style: {
@@ -24,7 +24,9 @@ async function addSticky(text, color, tag) {
             textAlign: "center",
             textAlignVertical: "top",
         },
-        tagIds: tag ? [tag.id] : []
+        tagIds: tag ? [tag.id] : [],
+        x: x ? x : 0,
+        y: y ? y : 0
     });
 }
 

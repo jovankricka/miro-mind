@@ -4,7 +4,7 @@ import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 import {addSticky, zoomTo} from "../apis/miroApi";
 
-const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\',\'x\':\'2\',\'y\':\'2\'},{\'id\':\'B\',\'text\':\'StickyB\',\'x\':\'2\',\'y\':\'2\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
+const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\',\'x\':2,\'y\':2},{\'id\':\'B\',\'text\':\'StickyB\',\'x\':2,\'y\':2},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
 
 const Marvin = () => {
 
@@ -40,7 +40,7 @@ const Marvin = () => {
     const updateBoard = async (stickies, connectors, conversation) => {
         const newStickies = []
         for (const sticky of stickies) {
-            newStickies.push(await addSticky(sticky.text))
+            newStickies.push(await addSticky(sticky.text, 'light_green', undefined, sticky.x, sticky.y))
         }
         setState({
             input: '',
@@ -63,7 +63,7 @@ const Marvin = () => {
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
             'Make sure to escape single quotes in your `feedback` field with backslashes. Prompt user for follow ups. ' +
-            'Make sure stickies are at least 50 units apart. Do not leave trailing commas in JSON arrays.'
+            'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
     }
 
     const renderChatHistory = () => {
