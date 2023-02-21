@@ -4,7 +4,7 @@ import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 import {addSticky, zoomTo} from "../apis/miroApi";
 
-const SAMPLE_WHITEBOARD_JSON = '{"stickies":[{"id":"A","text":"StickyA","x":2,"y":2},{"id":"B","text":"StickyB","x":2,"y":2},...],"connectors":[{"from":"A","to":"B"},...]}'
+const SAMPLE_WHITEBOARD_JSON = '{"stickies":[{"id":"A","text":"...","x":2,"y":2},{"id":"B","text":"...","x":2,"y":2},...],"connectors":[{"from":"A","to":"B"},...]}'
 
 const Marvin = () => {
 
@@ -70,21 +70,24 @@ const Marvin = () => {
 
     const wrapUserInput = (userInput) => {
         const openingLine = state.conversation.length === 0 ?
+            'You are ideating with the user on a whiteboard.' +
             'This is the sample whiteboard description in JSON format ' + SAMPLE_WHITEBOARD_JSON + '.' :
             'This is the whiteboard description in JSON format ' + JSON.stringify({
                 stickies: state.stickies,
                 connectors: state.connectors
-            }) + '.';
+            }) + '. ';
         const previousConversation = getPreviousConversation();
-        return openingLine + ' This is users input \'' + userInput + '\. ' +
+        return openingLine +
             'This is previous conversation with the user ' + previousConversation + '.' +
-            'Brainstorm with the user so that you return the updated version of the whiteboard ' +
-            'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
+            'This is user\'s new input \'' + userInput + '\. ' +
+            'Respond to the user\'s input by providing new ideas and make sticky notes for important ideas.' +
+            'Return the updated version of the whiteboard JSON. ' +
+            'Also include your feedback in a natural language as \'feedback\' field in that JSON. ' +
             'Use double quotes around all JSON fields and values. ' +
             'Do not use newlines at all in your response.' +
             'Prompt user for follow ups. ' +
             'If you are adding a new sticky, make sure its id is unique.' +
-            'When user asks a straight question, answer it in detail and create stickies that describe your answer. ' +
+            'Use stickies and connectors to build a diagram if needed.' +
             'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
     }
 

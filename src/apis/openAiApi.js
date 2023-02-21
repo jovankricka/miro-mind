@@ -8,8 +8,8 @@ async function getAnswerFromAIModel(question, apiKey) {console.log('Calling Open
         body: JSON.stringify({
             "model": "text-davinci-003",
             "prompt": question,
-            "max_tokens": 1000,
-            "temperature": 0
+            "max_tokens": 3000,
+            "temperature": 0.5
         })
     })).json();console.log(aiResponse)
     return aiResponse.choices[0].text
