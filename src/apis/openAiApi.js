@@ -1,5 +1,5 @@
-async function getAnswerFromChatGpt(question, apiKey) {console.log('Calling OpenAI')
-    const chatGptResponse = await (await fetch('https://api.openai.com/v1/completions', {
+async function getAnswerFromAIModel(question, apiKey) {console.log('Calling OpenAI')
+    const aiResponse = await (await fetch('https://api.openai.com/v1/completions', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -11,8 +11,8 @@ async function getAnswerFromChatGpt(question, apiKey) {console.log('Calling Open
             "max_tokens": 1000,
             "temperature": 0
         })
-    })).json();console.log(chatGptResponse)
-    return chatGptResponse.choices[0].text
+    })).json();console.log(aiResponse)
+    return aiResponse.choices[0].text
 }
 
 async function getPhotoUrlFromDalle2(description, apiKey) {
@@ -31,4 +31,4 @@ async function getPhotoUrlFromDalle2(description, apiKey) {
     return dalle2Response.data[0].url
 }
 
-export { getAnswerFromChatGpt, getPhotoUrlFromDalle2 };
+export { getAnswerFromAIModel, getPhotoUrlFromDalle2 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {getAnswerFromChatGpt} from "../apis/openAiApi";
+import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 import {addSticky, zoomTo} from "../apis/miroApi";
 
@@ -25,12 +25,12 @@ const Marvin = () => {
         })
     };
 
-    const handleMarvinSend = async () => {console.log('Sending to ChatGPT...')
-        const chatGptResponse = JSON.parse(sanitize(await getAnswerFromChatGpt(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)))
-        const feedback = chatGptResponse.feedback;
+    const handleMarvinSend = async () => {console.log('Sending to the AI...')
+        const aiResponse = JSON.parse(sanitize(await getAnswerFromAIModel(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)))
+        const feedback = aiResponse.feedback;
         console.log(feedback)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
-        await updateBoard(chatGptResponse.stickies, chatGptResponse.connectors, state.conversation.concat([
+        await updateBoard(aiResponse.stickies, aiResponse.connectors, state.conversation.concat([
             {author: 'You', key: lastKey + 1, text: state.input},
             {author: 'Marvin', key: lastKey + 2, text: feedback}]))
     }
