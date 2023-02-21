@@ -59,19 +59,19 @@ async function addImageRightOfStickyNote(url, stickyNote) {
     })
 }
 
-async function connectTwoItems(firstItem, secondItem) {
-    if (firstItem === undefined || secondItem === undefined) {
+async function connectTwoItems(firstItemId, secondItemId) {
+    if (firstItemId === undefined || secondItemId === undefined) {
         return
     }
-    await miro.board.createConnector({
+    return await miro.board.createConnector({
         shape: 'curved',
         start: {
-            item: firstItem.id,
-            snapTo: 'right',
+            item: firstItemId,
+            snapTo: 'auto',
         },
         end: {
-            item: secondItem.id,
-            snapTo: 'left',
+            item: secondItemId,
+            snapTo: 'auto',
         },
     });
 }

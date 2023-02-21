@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState} from 'react';
 import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
-import {addSticky, zoomTo} from "../apis/miroApi";
+import {addSticky, connectTwoItems, zoomTo} from "../apis/miroApi";
 
 const SAMPLE_WHITEBOARD_JSON = '{"stickies":[{"id":"A","text":"...","x":2,"y":2},{"id":"B","text":"...","x":2,"y":2},...],"connectors":[{"from":"A","to":"B"},...]}'
 
@@ -50,6 +50,25 @@ const Marvin = () => {
                     x: fullSticky.x,
                     y: fullSticky.y
                 })
+                connectors.forEach(connector => {
+                    if (connector.from === sticky.id) {
+                        connector.from = fullSticky.id;
+                    }
+                    if (connector.to === sticky.id) {
+                        connector.to = fullSticky.id;
+                    }
+                })
+            }
+        }
+        const newConnectors = []
+        for (const connector of connectors) {
+            if (state.connectors.find(existingConnector => existingConnector.id === connector.id) === undefined) {
+                const fullConnector = await connectTwoItems(connector.from, connector.to)
+                newConnectors.push({
+                    id: fullConnector.id,
+                    from: connector.from,
+                    to: connector.to,
+                })
             }
         }
         console.log(newStickies)
@@ -59,8 +78,8 @@ const Marvin = () => {
         setState({
             input: '',
             conversation: conversation,
-            stickies: newStickies,
-            connectors: state.connectors,
+            stickies: state.stickies.concat(newStickies),
+            connectors: state.connectors.concat(newConnectors),
         })
     }
 
@@ -80,15 +99,17 @@ const Marvin = () => {
         return openingLine +
             'This is previous conversation with the user ' + previousConversation + '.' +
             'This is user\'s new input \'' + userInput + '\. ' +
-            'Respond to the user\'s input by providing new ideas and make sticky notes for important ideas.' +
+            'Respond to the user\'s input with at least 10 new and unique ideas. ' +
+            'Then convert that response to sticky notes and connectors.' +
             'Return the updated version of the whiteboard JSON. ' +
             'Also include your feedback in a natural language as \'feedback\' field in that JSON. ' +
             'Use double quotes around all JSON fields and values. ' +
             'Do not use newlines at all in your response.' +
-            'Prompt user for follow ups. ' +
-            'If you are adding a new sticky, make sure its id is unique.' +
-            'Use stickies and connectors to build a diagram if needed.' +
-            'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays.'
+            // 'Prompt user for follow ups. ' +
+            // 'If you are adding a new sticky, make sure its id is unique.' +
+            // 'Use stickies and connectors to build a diagram if needed.' +
+            'Make sure stickies are at least 250 units apart. Do not leave trailing commas in JSON arrays. ' +
+            'No stickies should overlap. Connectors should be created only where necessary and should not cross over stickies.'
     }
 
     const getPreviousConversation = () => {

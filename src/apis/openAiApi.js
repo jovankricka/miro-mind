@@ -9,7 +9,7 @@ async function getAnswerFromAIModel(question, apiKey) {console.log('Calling Open
             "model": "text-davinci-003",
             "prompt": question,
             "max_tokens": 3000,
-            "temperature": 0.5
+            "temperature": 0.1
         })
     })).json();console.log(aiResponse)
     return aiResponse.choices[0].text

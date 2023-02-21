@@ -53,14 +53,14 @@ const FiveWhys = () => {
         const inputStickyNote = lastStickyNote ?
             await addStickyRightOfAnotherSticky(state.input, 'light_green', lastStickyNote) :
             await addSticky(state.input, 'light_green');
-        await connectTwoItems(lastStickyNote, inputStickyNote, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
+        await connectTwoItems(lastStickyNote ? lastStickyNote.id : undefined, inputStickyNote.id, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
         let updatedStickyNotes = state.stickyNotes.concat([inputStickyNote])
         await zoomTo(updatedStickyNotes, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
         const question = sanitize(await getAnswerFromAIModel("I want you to help me do 5 whys analysis. When I give you a statement of the " +
             "cause, you will return me only one question starting with 'Why' which is attempting to dig deeper into the " +
             "cause I provided. Here is the statement '" + state.input + "'.", import.meta.env.VITE_OPEN_AI_API_KEY));
         const questionStickyNote = await addStickyRightOfAnotherSticky(question, 'light_blue', inputStickyNote, state.miroMindTag, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN);
-        await connectTwoItems(inputStickyNote, questionStickyNote, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
+        await connectTwoItems(inputStickyNote.id, questionStickyNote.id, import.meta.env.VITE_MIRO_API_ACCESS_TOKEN)
         updatedStickyNotes = updatedStickyNotes.concat([questionStickyNote])
         setState({
             input: '',
