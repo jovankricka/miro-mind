@@ -4,7 +4,7 @@ import {getAnswerFromAIModel} from "../apis/openAiApi";
 import marvinImage from '../assets/marvin.png'
 import {addSticky, zoomTo} from "../apis/miroApi";
 
-const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\'},{\'id\':\'B\',\'text\':\'StickyB\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
+const SAMPLE_WHITEBOARD_JSON = '{\'stickies\':[{\'id\':\'A\',\'text\':\'StickyA\',\'x\':\'2\',\'y\':\'2\'},{\'id\':\'B\',\'text\':\'StickyB\',\'x\':\'2\',\'y\':\'2\'},...],\'connectors\':[{\'from\':\'A\',\'to\':\'B\'},...]}'
 
 const Marvin = () => {
 
@@ -25,8 +25,10 @@ const Marvin = () => {
         })
     };
 
-    const handleMarvinSend = async () => {console.log('Sending to the AI...')
+    const handleMarvinSend = async () => {
+        console.log('Sending prompt to teh AI...')
         const aiResponse = JSON.parse(sanitize(await getAnswerFromAIModel(wrapUserInput(state.input), import.meta.env.VITE_OPEN_AI_API_KEY)))
+        console.log(aiResponse)
         const feedback = aiResponse.feedback;
         console.log(feedback)
         const lastKey = state.conversation.length === 0 ? 0 : state.conversation[state.conversation.length - 1].key;
@@ -60,7 +62,8 @@ const Marvin = () => {
         return openingLine + SAMPLE_WHITEBOARD_JSON + '. This is users input ' +
             '\'' + userInput + '\'. Brainstorm with the user so that you return the updated version of the whiteboard ' +
             'JSON and your feedback in a natural language as \'feedback\' field in that JSON. ' +
-            'Make sure to escape single quotes in your `feedback` field with backslashes. Prompt user for follow ups.'
+            'Make sure to escape single quotes in your `feedback` field with backslashes. Prompt user for follow ups. ' +
+            'Make sure stickies are at least 50 units apart. Do not leave trailing commas in JSON arrays.'
     }
 
     const renderChatHistory = () => {
