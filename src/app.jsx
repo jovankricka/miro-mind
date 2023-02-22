@@ -8,6 +8,10 @@ import {Assist} from "./usecases/assist";
 
 const App = () => {
 
+    miro.board.ui.on("drop", async ({x, y, target}) => {
+        await miro.board.createStickyNote({x, y, content: target.innerText});
+    });
+
     const [state, setState] = useState({
         currentUseCase: undefined
     });

@@ -7,7 +7,8 @@ import {addSticky, addStickyRightOfAnotherSticky, connectTwoItems, zoomTo} from 
 const Assist = () => {
 
     const [state, setState] = useState({
-        selectedStickies: []
+        selectedStickies: [],
+        generatedStickies: []
     });
 
     miro.board.ui.on('selection:update', async (event) => {
@@ -19,7 +20,8 @@ const Assist = () => {
         const stickyNotes = selectedItems.filter((item) => item.type === 'sticky_note');
 
         setState({
-            selectedStickies: stickyNotes
+            selectedStickies: stickyNotes,
+            generatedStickies: state.generatedStickies
         })
     });
 
@@ -30,42 +32,40 @@ const Assist = () => {
         const content = state.selectedStickies.map(sticky => '[' + sticky.content + ']').join()
         const aiResponse = JSON.parse(await getAnswerFromAIModel(
             'Generate at least 10 ideas based on this input ' + content + '. ' +
-            'Return ideas as a JSON with "ideas" array containing strings with ideas.',
+            'Respond with a JSON object with "ideas" array containing strings with ideas.',
             import.meta.env.VITE_OPEN_AI_API_KEY))
-        const newStickies = []
-        newStickies.push(await addStickyRightOfAnotherSticky(aiResponse.ideas[0], 'light_green', state.selectedStickies[0]));
-        for (let i = 1; i < aiResponse.ideas.length;i++) {
-            newStickies.push(
-                await addStickyRightOfAnotherSticky(aiResponse.ideas[i], 'light_green', newStickies[newStickies.length - 1]));
-        }
+        setState({
+            selectedStickies: state.selectedStickies,
+            generatedStickies: aiResponse.ideas
+        })
     }
 
     const refineStickies = async () => {
         const content = state.selectedStickies.map(sticky => '[' + sticky.content + ']').join()
         const aiResponse = JSON.parse(await getAnswerFromAIModel(
             'Generate at least 10 refinements and different formulations based on this input ' + content + '. ' +
-            'Return refinements as a JSON with "refinements" array containing strings with refinements.',
+            'Respond with a JSON object with "refinements" array containing strings with refinements.',
             import.meta.env.VITE_OPEN_AI_API_KEY))
-        const newStickies = []
-        newStickies.push(await addStickyRightOfAnotherSticky(aiResponse.refinements[0], 'light_green', state.selectedStickies[0]));
-        for (let i = 1; i < aiResponse.refinements.length;i++) {
-            newStickies.push(
-                await addStickyRightOfAnotherSticky(aiResponse.refinements[i], 'light_green', newStickies[newStickies.length - 1]));
-        }
+        setState({
+            selectedStickies: state.selectedStickies,
+            generatedStickies: aiResponse.refinements
+        })
     }
 
     const reverseStickies = async () => {
         const content = state.selectedStickies.map(sticky => '[' + sticky.content + ']').join()
         const aiResponse = JSON.parse(await getAnswerFromAIModel(
             'Generate at least 10 reverse formulations based on this input ' + content + '. ' +
-            'Return reversals as a JSON with "reversals" array containing strings with reversals.',
+            'Respond with a JSON object with "reversals" array containing strings with reversals.',
             import.meta.env.VITE_OPEN_AI_API_KEY))
-        const newStickies = []
-        newStickies.push(await addStickyRightOfAnotherSticky(aiResponse.reversals[0], 'light_green', state.selectedStickies[0]));
-        for (let i = 1; i < aiResponse.reversals.length;i++) {
-            newStickies.push(
-                await addStickyRightOfAnotherSticky(aiResponse.reversals[i], 'light_green', newStickies[newStickies.length - 1]));
-        }
+        setState({
+            selectedStickies: state.selectedStickies,
+            generatedStickies: aiResponse.reversals
+        })
+    }
+
+    const renderGeneratedStickies = () => {
+        return state.generatedStickies.map(sticky => <div className="miro-draggable">{sticky}</div>)
     }
 
     return (
@@ -83,6 +83,9 @@ const Assist = () => {
                 <a className="button button-primary" onClick={reverseStickies}>
                     Reverse
                 </a>
+            </div>
+            <div>
+                {renderGeneratedStickies()}
             </div>
         </div>
     );
